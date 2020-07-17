@@ -20,9 +20,9 @@ LATITUDES = [
 
 ZOOM_LEVELS = {
     # zoom level: (tile_count, latitudes, percentage_scale)
-    0: (1,  LATITUDES[-1:],  5.0),
-    1: (8,  LATITUDES[1::2], 10.0),
-    2: (16, LATITUDES,       100.0),
+    0: (1,  LATITUDES[-1:],  0.1),
+    1: (8,  LATITUDES[1::2], 0.5),
+    2: (16, LATITUDES,       1.0),
 }
 
 
@@ -91,8 +91,9 @@ for zoom, (tile_count, latitudes, scale) in ZOOM_LEVELS.items():
                 path,
                 source,
                 srcWin=window,
-                widthPct=scale,
-                heightPct=scale)
+                width=int(scale * tile_width),
+                height=0  # keep aspect ratio
+            )
             manifest[zoom][f'{tile_id}!{zoom}/{filename}'] = [
                 min_lon, min_lat, max_lon, max_lat
             ]
