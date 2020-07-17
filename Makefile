@@ -1,8 +1,11 @@
 NE = www.naturalearthdata.com
 NE_URL := https://$(NE)/http//$(NE)/download/10m/raster
 
+# Natural Earth II with shaded relief, water, and drainages, hi-res
+SOURCE_DATA = NE2_HR_LC_SR_W_DR
+
 # Cross blended hypso with shaded relief, water, and drainages, hi-res
-SOURCE_DATA = HYP_HR_SR_W_DR
+# SOURCE_DATA = HYP_HR_SR_W_DR
 
 $(SOURCE_DATA).zip:
 	curl -L $(NE_URL)/$@ > $@
