@@ -3,6 +3,8 @@
 import os
 import sys
 import json
+import string
+import random
 from osgeo import gdal
 
 LATITUDES = [
@@ -22,6 +24,11 @@ ZOOM_LEVELS = {
     1: (8,  LATITUDES[1::2], 10.0),
     2: (16, LATITUDES,       100.0),
 }
+
+
+# for cache-busting
+def random_prefix():
+    return ''.join(random.choices(string.ascii_lowercase + string.digits, k=4))
 
 
 source = gdal.Open(sys.argv[1])
@@ -73,11 +80,12 @@ for zoom, (tile_count, latitudes, scale) in ZOOM_LEVELS.items():
         for y, tile_height in iterate_latitudes(latitudes):
             #        <xpixel> <yline> <w> <h>
             window = [x, y, tile_width, tile_height]
+            prefix = random_prefix()
             min_lon = longitude(x)
             min_lat = latitude(y + tile_height)
             max_lon = longitude(x + tile_width)
             max_lat = latitude(y)
-            filename = f'{min_lon}x{min_lat}x{max_lon}x{max_lat}.jpg'
+            filename = f'{prefix}_{min_lon}x{min_lat}x{max_lon}x{max_lat}.jpg'
             path = f'{dirname}/{filename}'
             gdal.Translate(
                 path,
